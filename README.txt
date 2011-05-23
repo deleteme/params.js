@@ -1,3 +1,6 @@
+coffee -wc params.coffee
+
+-----
 Params
 
   object

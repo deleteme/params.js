@@ -8,30 +8,96 @@
   <script src="params.js" type="text/javascript" charset="utf-8"></script>
   <script>
   $(document).ready(function(){
-    
-    test("a basic test example", function() {
-      ok( true, "this test is fine" );
-      var value = "hello";
-      equals( "hello", value, "We expect value to be hello" );
-    });
 
-    module("Module A");
+    var cheapcadaversURL = "http://www.cheapcadavers.com/?rick=moranis&bumblebee=tuna&hash[some_key]=someValue";
+    var stubLocation = {
+      href:     cheapcadaversURL,
+      search:   "?rick=moranis&bumblebee=tuna&hash[some_key]=someValue",
+      protocol: "http:",
+      host:     "www.cheapcadavers.com",
+      pathname: "/"
+    };
 
-    test("first test within module", function() {
-      ok( true, "all pass" );
-    });
-
-    test("second test within module", function() {
-      ok( true, "all pass" );
-    });
-
-    module("Module B");
-
-    test("some other test", function() {
+    test("Can be instantiated with an optional _location argument", function(){
       expect(2);
-      equals( true, false, "failing test" );
-      equals( true, true, "passing test" );
+      ok(new Params(stubLocation), "We expect it not to error with a location.");
+      ok(new Params(), "We expect it not to error without a location.");
     });
+
+    var params = new Params(stubLocation);
+
+    test("url() should return the private Params URL", function(){
+      expect(1);
+      equals(params.url(), cheapcadaversURL);
+    });
+
+    module("Reading Params");
+
+    test("Knows about existing params on init.", function(){
+      expect(3);
+      equals(params.get('rick'), 'moranis');
+      equals(params.get('bumblebee'), 'tuna');
+      equals(params.get('hash[some_key]'), 'someValue');
+    });
+
+    test("Returns undefined for undefined keys.", function(){
+      expect(1);
+      equals(params.get('sandwich'), undefined);
+    });
+
+    module("Setting Params");
+
+    test("Returns the value it's setting.", function(){
+      expect(1);
+      equals(params.set('loser', 'baby'), 'baby');
+    });
+
+    test("Returns an object if it took one.", function(){
+      expect(1);
+      var blort = {
+        smoo: 123,
+        lamb: 'da'
+      };
+      equals(params.set(blort), blort);
+    });
+
+    test("Can set a single param pair, and get it back out.", function(){
+      expect(2);
+      var target = params.set('lazer', 'gunz');
+      equals(params.get('lazer'), target);
+      notEqual(params.get('lazer'), undefined);
+    });
+
+    module('Building URL');
+    var building = new Params(stubLocation);
+
+    test("url() should return an href with the updated params.", function(){
+      expect(1);
+      building.set('sky', 'blue');
+      equals(building.url(), stubLocation.href + '&sky=blue');
+    });
+
+    module('Reducing URL Params');
+
+    test("unset() should return value of key being removed.", function(){
+      expect(1);
+      equals(building.unset('sky'), 'blue');
+    });
+
+    test("url() should not include a key that has been removed.", function(){
+      expect(4);
+      equals(building.url(), stubLocation.href);
+
+      building.unset('rick');
+      equals(building.url(), "http://www.cheapcadavers.com/?bumblebee=tuna&hash[some_key]=someValue");
+
+      building.unset('hash[some_key]');
+      equals(building.url(), "http://www.cheapcadavers.com/?bumblebee=tuna");
+
+      building.unset('bumblebee');
+      equals(building.url(), "http://www.cheapcadavers.com/");
+    });
+
 
     });
   </script>
