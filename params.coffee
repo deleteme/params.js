@@ -43,8 +43,7 @@ window.Params = (_location)->
         _set key, arg[key]
       arg
     else
-      throw "Unexpected data type for: #{arg}. Should be a string,
-        number, or object"
+      throw "Unexpected data type for: #{arg}. Should be a string, number, or object"
 
   unset = (key)->
     value = _params[key]

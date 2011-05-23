@@ -46,7 +46,7 @@
         }
         return arg;
       } else {
-        throw "Unexpected data type for: " + arg + ". Should be a string,        number, or object";
+        throw "Unexpected data type for: " + arg + ". Should be a string, number, or object";
       }
     };
     unset = function(key) {
