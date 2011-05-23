@@ -117,7 +117,13 @@
 
     module('Errors!');
     test("Should throw an error with an unsupported data type.", function(){
-      // todo
+      expect(2);
+      raises(function(){
+        building.set(function(){}, 'blort');
+      });
+      raises(function(){
+        building.set(false, 'blort');
+      });
     });
 
 
