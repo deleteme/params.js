@@ -26,9 +26,9 @@
 
     var params = new Params(stubLocation);
 
-    test("url() should return the private Params URL", function(){
+    test("href() should return the private Params href", function(){
       expect(1);
-      equals(params.url(), cheapcadaversURL);
+      equals(params.href(), cheapcadaversURL);
     });
 
     module("Reading Params");
@@ -47,18 +47,27 @@
 
     module("Setting Params");
 
-    test("Returns the value it's setting.", function(){
-      expect(1);
-      equals(params.set('loser', 'baby'), 'baby');
+    test("Can set() a key that's a string or number, and returns the value that's being set.", function(){
+      expect(4);
+      equals(params.set('porkchop', 'sandwiches'), 'sandwiches');
+      equals(params.get('porkchop'), 'sandwiches');
+      equals(params.set(341, 'baloney'), 'baloney');
+      equals(params.get(341), 'baloney');
     });
 
+    var paramsWithObject = new Params(stubLocation);
     test("Returns an object if it took one.", function(){
-      expect(1);
+      expect(5);
       var blort = {
         smoo: 123,
-        lamb: 'da'
+        lamb: 'da',
+        123:  'asdf'
       };
-      equals(params.set(blort), blort);
+      equals(paramsWithObject.set(blort), blort);
+      equals(paramsWithObject.get('smoo'), 123);
+      equals(paramsWithObject.get('lamb'), 'da');
+      equals(paramsWithObject.get(123), 'asdf');
+      equals(paramsWithObject.get('123'), 'asdf');
     });
 
     test("Can set a single param pair, and get it back out.", function(){
@@ -68,13 +77,21 @@
       notEqual(params.get('lazer'), undefined);
     });
 
-    module('Building URL');
+    module('Building search()');
     var building = new Params(stubLocation);
 
-    test("url() should return an href with the updated params.", function(){
+    test("search() should return just the params.", function(){
       expect(1);
       building.set('sky', 'blue');
-      equals(building.url(), stubLocation.href + '&sky=blue');
+      equals(building.search(), stubLocation.search + '&sky=blue');
+    });
+
+    module('Building href');
+
+    test("href() should return an href with the updated params.", function(){
+      expect(1);
+      building.set('sky', 'blue');
+      equals(building.href(), stubLocation.href + '&sky=blue');
     });
 
     module('Reducing URL Params');
@@ -84,22 +101,27 @@
       equals(building.unset('sky'), 'blue');
     });
 
-    test("url() should not include a key that has been removed.", function(){
+    test("href() should not include a key that has been removed.", function(){
       expect(4);
-      equals(building.url(), stubLocation.href);
+      equals(building.href(), stubLocation.href);
 
       building.unset('rick');
-      equals(building.url(), "http://www.cheapcadavers.com/?bumblebee=tuna&hash[some_key]=someValue");
+      equals(building.href(), "http://www.cheapcadavers.com/?bumblebee=tuna&hash[some_key]=someValue");
 
       building.unset('hash[some_key]');
-      equals(building.url(), "http://www.cheapcadavers.com/?bumblebee=tuna");
+      equals(building.href(), "http://www.cheapcadavers.com/?bumblebee=tuna");
 
       building.unset('bumblebee');
-      equals(building.url(), "http://www.cheapcadavers.com/");
+      equals(building.href(), "http://www.cheapcadavers.com/");
+    });
+
+    module('Errors!');
+    test("Should throw an error with an unsupported data type.", function(){
+      // todo
     });
 
 
-    });
+  });
   </script>
   
 </head>

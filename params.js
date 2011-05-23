@@ -1,6 +1,6 @@
 (function() {
   window.Params = function(_location) {
-    var get, go, pair, set, unset, url, _i, _len, _params, _prefix, _search, _set;
+    var href, pair, search, set, unset, _i, _len, _params, _prefix, _search, _set;
     _location = _location || location;
     _search = _location.search;
     _prefix = _location.protocol + '//' + _location.host + _location.pathname;
@@ -13,8 +13,11 @@
         _params[pair[0]] = pair[1];
       }
     }
-    url = function() {
-      var key, pairs, suffix;
+    href = function() {
+      return _prefix + search();
+    };
+    search = function() {
+      var key, pairs;
       pairs = (function() {
         var _results;
         _results = [];
@@ -23,29 +26,27 @@
         }
         return _results;
       })();
-      suffix = pairs.length > 0 ? "?" + pairs.join('&') : "";
-      return _prefix + suffix;
-    };
-    go = function() {
-      return open(url());
-    };
-    get = function(key) {
-      return _params[key];
+      if (pairs.length > 0) {
+        return "?" + pairs.join('&');
+      } else {
+        return "";
+      }
     };
     _set = function(key, value) {
       return _params[key] = value;
     };
     set = function() {
-      var arg, key, _i, _len;
+      var arg, key;
       arg = arguments[0];
-      if (typeof arg === 'string') {
-        return _set(arg, arguments[1]);
+      if (typeof arg === 'string' || typeof arg === 'number') {
+        return _set(String(arg), arguments[1]);
       } else if (typeof arg === 'object') {
-        for (_i = 0, _len = arg.length; _i < _len; _i++) {
-          key = arg[_i];
+        for (key in arg) {
           _set(key, arg[key]);
         }
         return arg;
+      } else {
+        throw "Unexpected data type for: " + arg + ". Should be a string,        number, or object";
       }
     };
     unset = function(key) {
@@ -55,9 +56,11 @@
       return value;
     };
     return {
-      url: url,
-      go: go,
-      get: get,
+      href: href,
+      search: search,
+      get: function(key) {
+        return _params[key];
+      },
       set: set,
       unset: unset
     };

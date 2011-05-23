@@ -1,3 +1,5 @@
+# a small library to create a URL by adding and removing params while
+# preserving existing params
 window.Params = (_location)->
 
   _location = _location or location
@@ -13,16 +15,18 @@ window.Params = (_location)->
       pair = pair.split('=')
       _params[pair[0]] = pair[1]
 
-  url = ->
+  # build the full url, similar to location.href
+  href = ->
+    _prefix + search()
+
+  # build only the params, similar to location.search
+  search = ->
     pairs = for key of _params
       "#{key}=#{_params[key]}"
-
-    suffix = if pairs.length > 0 then "?" + pairs.join('&') else ""
-    _prefix + suffix
-
-  go  = -> open url()
-
-  get = (key)-> _params[key]
+    if pairs.length > 0
+      "?" + pairs.join('&')
+    else
+      ""
 
   # simple setting of a pair
   _set = (key, value)->
@@ -31,23 +35,27 @@ window.Params = (_location)->
   set = ->
     arg = arguments[0]
     # if a simple pair
-    if typeof arg is 'string'
-      _set arg, arguments[1]
+    if typeof arg is 'string' or typeof arg is 'number'
+      _set String(arg), arguments[1]
 
     else if typeof arg is 'object'
-      for key in arg
+      for key of arg
         _set key, arg[key]
       arg
+    else
+      throw "Unexpected data type for: #{arg}. Should be a string,
+        number, or object"
 
   unset = (key)->
     value = _params[key]
     delete _params[key]
     value
 
+  # export
   {
-    url
-    go
-    get
+    href
+    search
+    get : (key)-> _params[key]
     set
     unset
   }
