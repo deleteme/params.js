@@ -1,7 +1,9 @@
 (function() {
   window.Params = function(_location) {
     var href, pair, search, set, unset, _i, _len, _params, _prefix, _search, _set;
-    _location = _location || location;
+    if (_location == null) {
+      _location = location;
+    }
     _search = _location.search;
     _prefix = _location.protocol + '//' + _location.host + _location.pathname;
     _params = {};

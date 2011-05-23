@@ -1,8 +1,7 @@
 # a small library to create a URL by adding and removing params while
 # preserving existing params
-window.Params = (_location)->
+window.Params = (_location = location)->
 
-  _location = _location or location
   _search   = _location.search
   _prefix   = _location.protocol + '//' + _location.host + _location.pathname
   _params   = {}
