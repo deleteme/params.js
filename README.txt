@@ -1,39 +1,46 @@
+Params.js is class that has an API for getting, setting, and unsetting URL query params
+without destroying any existing query params.
+
+It doesn't do anything fancy like serializing nested objects.
+
+Building:
+
+To watch the coffee file for changes and build the js:
+
 coffee -wc params.coffee
 
------
-Params
+Testing:
 
-  object
-  url
+Testing uses qunit. Open tests.html and tests.min.html.
 
-  'http://dc-staging.heroku.com/?mobile_site=true&locale=fr-ca'
-  set(object || key, value)
-  'http://dc-staging.heroku.com/?mobile_site=true&locale=fr-ca&coords[lat]=30.48'
+API:
 
+First, make an instance of Params.js. By default, it uses window.location, but
+you can pass an alternate, similar object to 'window.location' while making an
+instance.
 
-  unset(key)
-  get(key)
+var params = new Params();
 
-  url()
-    => returns 'http:domain.com/?blah=fart'
+get(key)
+  Returns the value of the key
 
-  go()
-    window.location.href = @url()
+set(object or key, value)
+  If an object is the argument, then it will copy all of the object's
+  properties to the params.
 
+  If a key and value is passed, then it will make a new param with the given
+  key and value.
 
+  It returns either the object it was passed, or the key's value.
 
-    Params.params.key
+unset(key)
+  Removes the key and value pair from the params.
+  Returns the pair's value.
 
+href()
+  Returns a string that is a full URL, similar to window.location.href.
 
-
-
-
-    var geolocation ={
-      lat: 12,
-      lng: 34
-    }
-
-    o['geolocation[lat]']
-
-    "geolocation[lat]=12&geolocation[lng]=34"
+search()
+  Returns a string that is just the params, in a serialized form, similar to
+  window.location.search.
 
