@@ -1,7 +1,10 @@
+Params.js takes the suck out of window.location.search.
+
 Params.js is class that has an API for getting, setting, and unsetting URL query params
 without destroying any existing query params.
 
-It doesn't do anything fancy like serializing nested objects.
+It doesn't do anything fancy like serializing nested objects or attempting to
+preserve a particular param order.
 
 Building:
 
