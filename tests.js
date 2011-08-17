@@ -99,23 +99,22 @@ $(document).ready(function(){
     building.unset('rick');
     equals(building.href(), "http://www.cheapcadavers.com/?bumblebee=tuna&hash[some_key]=someValue");
 
-      building.unset('hash[some_key]');
+    building.unset('hash[some_key]');
     equals(building.href(), "http://www.cheapcadavers.com/?bumblebee=tuna");
 
-      building.unset('bumblebee');
+    building.unset('bumblebee');
     equals(building.href(), "http://www.cheapcadavers.com/");
   });
 
-    module('Errors!');
-    test("Should throw an error with an unsupported data type.", function(){
-      expect(2);
-      raises(function(){
-        building.set(function(){}, 'blort');
-      });
-      raises(function(){
-        building.set(false, 'blort');
-      });
+  module('Errors!');
+  test("Should throw an error with an unsupported data type.", function(){
+    expect(2);
+    raises(function(){
+      building.set(function(){}, 'blort');
     });
-
+    raises(function(){
+      building.set(false, 'blort');
+    });
+  });
 
 });
