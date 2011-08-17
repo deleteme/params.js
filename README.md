@@ -37,9 +37,11 @@ var fakedParams = new Params(stubbedLocation);
 ```
 
 **get(key)**
+
 Returns the value of the key
 
 **set(object or key, value)**
+
 If an object is the argument, then it will copy all of the object's
 properties to the params.
 
@@ -49,16 +51,20 @@ key and value.
 It returns either the object it was passed, or the key's value.
 
 **unset(key)**
+
 Removes the key and value pair from the params.
 Returns the pair's value.
 
 **href()**
+
 Returns a string that is a full URL, similar to window.location.href.
 
 **search()**
+
 Returns a string that is just the params, in a serialized form, similar to
 window.location.search.
 
 **validate(string)**
+
 Useful to test if the given string resembles a valid location.search object.
 Returns true if it passes.
