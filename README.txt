@@ -10,7 +10,7 @@ Building:
 
 To watch the coffee file for changes and build the js:
 
-coffee -wc params.coffee
+coffee -wcb params.coffee
 
 Testing:
 
