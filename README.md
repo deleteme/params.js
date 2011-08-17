@@ -6,17 +6,17 @@ without destroying any existing query params.
 It doesn't do anything fancy like serializing nested objects or attempting to
 preserve a particular param order.
 
-*Building:*
+_Building:_
 
 To watch the coffee file for changes and build the js:
 
 `coffee -wcb params.coffee`
 
-*Testing:*
+_Testing:_
 
 Testing uses qunit. Open tests.html and tests.min.html.
 
-*API:*
+_API:_
 
 First, make an instance of Params.js. By default, it uses window.location, but
 you can pass an alternate, similar object to 'window.location' while making an
@@ -25,28 +25,28 @@ instance.
 var params = new Params();
 
 `get(key)`
-  Returns the value of the key
+Returns the value of the key
 
 `set(object or key, value)`
-  If an object is the argument, then it will copy all of the object's
-  properties to the params.
+If an object is the argument, then it will copy all of the object's
+properties to the params.
 
-  If a key and value is passed, then it will make a new param with the given
-  key and value.
+If a key and value is passed, then it will make a new param with the given
+key and value.
 
-  It returns either the object it was passed, or the key's value.
+It returns either the object it was passed, or the key's value.
 
 `unset(key)`
-  Removes the key and value pair from the params.
-  Returns the pair's value.
+Removes the key and value pair from the params.
+Returns the pair's value.
 
 `href()`
-  Returns a string that is a full URL, similar to window.location.href.
+Returns a string that is a full URL, similar to window.location.href.
 
 `search()`
-  Returns a string that is just the params, in a serialized form, similar to
-  window.location.search.
+Returns a string that is just the params, in a serialized form, similar to
+window.location.search.
 
 `validate(string)`
-  Useful to test if the given string resembles a valid location.search object.
-  Returns true if it passes.
+Useful to test if the given string resembles a valid location.search object.
+Returns true if it passes.
