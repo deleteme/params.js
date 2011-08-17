@@ -58,8 +58,41 @@
       delete _params[key]
       _buildPairs()
       value
+
+    # an internal array of validations
+    # if it passes the validation, it returns true
+    _validations = [
+      # should start with ?
+      (string)-> string.indexOf('?') is 0,
+      # it shouldn't start or end with &
+      (string)-> !string.match(/&$/)
+    ]
+
+    # validates the internal params
+    # or a string passed to it
+    validate = (string) ->
+
+      # use the internal params if a string isn't supplied
+      string ?= search()
+
+      # innocent until proven guilty
+      valid = true
+
+      # try each validation
+      if string and string.length > 0
+        for validation in _validations
+          valid = validation(string)
+          if valid is false
+            break
+
+      valid
+
     
     # setup
+    # warn if invalid object
+    unless (validate(_search))
+      throw "Initializing Params with invalid location.search."
+
     # build _params keys
     if _search.indexOf('?') >= 0
       # remove the leading ? character, and split on &
@@ -77,6 +110,7 @@
       get : (key)-> _params[key]
       set
       unset
+      validate
     }
 
 )(this)

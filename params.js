@@ -1,7 +1,7 @@
 (function() {
   (function(root) {
     return root.Params = function(_location) {
-      var href, pair, search, set, unset, _buildPairs, _i, _len, _pairs, _params, _prefix, _search, _set;
+      var href, pair, search, set, unset, validate, _buildPairs, _i, _len, _pairs, _params, _prefix, _search, _set, _validations;
       if (_location == null) {
         _location = location;
       }
@@ -56,6 +56,33 @@
         _buildPairs();
         return value;
       };
+      _validations = [
+        function(string) {
+          return string.indexOf('?') === 0;
+        }, function(string) {
+          return !string.match(/&$/);
+        }
+      ];
+      validate = function(string) {
+        var valid, validation, _i, _len;
+        if (string == null) {
+          string = search();
+        }
+        valid = true;
+        if (string && string.length > 0) {
+          for (_i = 0, _len = _validations.length; _i < _len; _i++) {
+            validation = _validations[_i];
+            valid = validation(string);
+            if (valid === false) {
+              break;
+            }
+          }
+        }
+        return valid;
+      };
+      if (!(validate(_search))) {
+        throw "Initializing Params with invalid location.search.";
+      }
       if (_search.indexOf('?') >= 0) {
         _search = _search.slice(1, _search.length).split('&');
         for (_i = 0, _len = _search.length; _i < _len; _i++) {
@@ -72,7 +99,8 @@
           return _params[key];
         },
         set: set,
-        unset: unset
+        unset: unset,
+        validate: validate
       };
     };
   })(this);

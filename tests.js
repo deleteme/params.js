@@ -1,13 +1,14 @@
 $(document).ready(function(){
 
   var cheapcadaversURL = "http://www.cheapcadavers.com/?rick=moranis&bumblebee=tuna&hash[some_key]=someValue";
-    var stubLocation = {
+  var stubLocation = {
     href:     cheapcadaversURL,
     search:   "?rick=moranis&bumblebee=tuna&hash[some_key]=someValue",
     protocol: "http:",
     host:     "www.cheapcadavers.com",
     pathname: "/"
   };
+
 
   test("Can be instantiated with an optional _location argument", function(){
     expect(2);
@@ -115,6 +116,45 @@ $(document).ready(function(){
     raises(function(){
       building.set(false, 'blort');
     });
+  });
+
+  module("validate()");
+  test("validates a single string argument", function(){
+    expect(2);
+    // should pass
+    ok(params.validate("?foo=bar"));
+    ok(params.validate("?foo=bar&baz=wat"));
+  });
+
+  test("should fail if doesnt start with ?", function(){
+    expect(3);
+    ok(!params.validate("Xfoo=bar&baz=wat"));
+    ok(!params.validate("&foo=bar&baz=wat"));
+    ok(!params.validate("&foo=bar&baz=wat&"));
+  });
+
+  test("should fail if ends with &", function(){
+    expect(1);
+    ok(!params.validate("?foo=bar&baz=wat&"));
+  });
+
+  test("should warn if location.search appears invalid", function(){
+    expect(1);
+    var invalidStubbedLocation = {
+      href:     cheapcadaversURL,
+      search:   "&rick=moranis&bumblebee=tuna&hash[some_key]=someValue&",
+      protocol: "http:",
+      host:     "www.cheapcadavers.com",
+      pathname: "/"
+    };
+    var makeParamsFromInvalidObject = function(){
+      var invalidParams = new Params(invalidStubbedLocation);
+    };
+    
+    raises(function(){
+      makeParamsFromInvalidObject();
+    }, "Initializing Params with invalid location.search.");
+
   });
 
 });
