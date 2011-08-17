@@ -6,17 +6,17 @@ without destroying any existing query params.
 It doesn't do anything fancy like serializing nested objects or attempting to
 preserve a particular param order.
 
-_Building:_
+### Building
 
 To watch the coffee file for changes and build the js:
 
 `coffee -wcb params.coffee`
 
-_Testing:_
+### Testing
 
 Testing uses qunit. Open tests.html and tests.min.html.
 
-_API:_
+### API
 
 First, make an instance of Params.js. By default, it uses window.location, but
 you can pass an alternate, similar object to 'window.location' while making an
