@@ -18,11 +18,23 @@ Testing uses qunit. Open tests.html and tests.min.html.
 
 ### API
 
-First, make an instance of Params.js. By default, it uses window.location, but
-you can pass an alternate, similar object to 'window.location' while making an
-instance.
+First, make an instance of `Params`. By default, it uses window.location, but
+you can pass an object the constructor that resembles 'window.location'.
 
+```javascript
+// plain
 var params = new Params();
+
+// with a stubbed location object
+var stubbedLocation = {
+  href: cheapcadaversURL,
+  search: "?rick=moranis&bumblebee=tuna&hash[some_key]=someValue",
+  protocol: "http:",
+  host: "www.cheapcadavers.com",
+  pathname: "/"
+};
+var fakedParams = new Params(stubbedLocation);
+```
 
 `get(key)`
 Returns the value of the key
