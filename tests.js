@@ -120,10 +120,22 @@ $(document).ready(function(){
 
   module("validate()");
   test("validates a single string argument", function(){
-    expect(2);
+    expect(3);
     // should pass
     ok(params.validate("?foo=bar"));
     ok(params.validate("?foo=bar&baz=wat"));
+    ok(params.validate(""));
+  });
+
+  test("should fail if the wrong data type is passed in", function(){
+    expect(7);
+    ok(!params.validate(undefined));
+    ok(!params.validate(false));
+    ok(!params.validate(true));
+    ok(!params.validate(324));
+    ok(!params.validate(/someregexp/));
+    ok(!params.validate([]));
+    ok(!params.validate({huh:'wat'}));
   });
 
   test("should fail if doesnt start with ?", function(){

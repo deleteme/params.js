@@ -62,9 +62,11 @@
     # an internal array of validations
     # if it passes the validation, it returns true
     _validations = [
+      # it's a string
+      (string)-> typeof string is 'string'
       # should start with ?
-      (string)-> string.indexOf('?') is 0,
-      # it shouldn't start or end with &
+      (string)-> if string.length > 0 then string.match(/^\?/) else true,
+      # it shouldn't end with &
       (string)-> !string.match(/&$/)
     ]
 
@@ -72,18 +74,14 @@
     # or a string passed to it
     validate = (string) ->
 
-      # use the internal params if a string isn't supplied
-      string ?= search()
-
       # innocent until proven guilty
       valid = true
 
       # try each validation
-      if string and string.length > 0
-        for validation in _validations
-          valid = validation(string)
-          if valid is false
-            break
+      for validation in _validations
+        valid = validation(string)
+        if not valid
+          break
 
       valid
 

@@ -58,24 +58,25 @@
       };
       _validations = [
         function(string) {
-          return string.indexOf('?') === 0;
+          return typeof string === 'string';
+        }, function(string) {
+          if (string.length > 0) {
+            return string.match(/^\?/);
+          } else {
+            return true;
+          }
         }, function(string) {
           return !string.match(/&$/);
         }
       ];
       validate = function(string) {
         var valid, validation, _i, _len;
-        if (string == null) {
-          string = search();
-        }
         valid = true;
-        if (string && string.length > 0) {
-          for (_i = 0, _len = _validations.length; _i < _len; _i++) {
-            validation = _validations[_i];
-            valid = validation(string);
-            if (valid === false) {
-              break;
-            }
+        for (_i = 0, _len = _validations.length; _i < _len; _i++) {
+          validation = _validations[_i];
+          valid = validation(string);
+          if (!valid) {
+            break;
           }
         }
         return valid;

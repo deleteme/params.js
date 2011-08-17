@@ -47,3 +47,6 @@ search()
   Returns a string that is just the params, in a serialized form, similar to
   window.location.search.
 
+validate(string)
+  Useful to test if the given string resembles a valid location.search object.
+  Returns true if it passes.
