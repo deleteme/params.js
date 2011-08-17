@@ -1,27 +1,22 @@
 (function() {
   (function(root) {
     return root.Params = function(_location) {
-      var href, pair, search, set, unset, _i, _len, _params, _prefix, _search, _set;
+      var href, pair, search, set, unset, _buildPairs, _i, _len, _pairs, _params, _prefix, _search, _set;
       if (_location == null) {
         _location = location;
       }
       _search = _location.search;
       _prefix = _location.protocol + '//' + _location.host + _location.pathname;
       _params = {};
-      if (_search.indexOf('?') >= 0) {
-        _search = _search.slice(1, _search.length).split('&');
-        for (_i = 0, _len = _search.length; _i < _len; _i++) {
-          pair = _search[_i];
-          pair = pair.split('=');
-          _params[pair[0]] = pair[1];
-        }
-      }
-      href = function() {
-        return _prefix + search();
+      _pairs = [];
+      _set = function(key, value) {
+        _params[key] = value;
+        _buildPairs();
+        return value;
       };
-      search = function() {
-        var key, pairs;
-        pairs = (function() {
+      _buildPairs = function() {
+        var key;
+        return _pairs = (function() {
           var _results;
           _results = [];
           for (key in _params) {
@@ -29,14 +24,16 @@
           }
           return _results;
         })();
-        if (pairs.length > 0) {
-          return "?" + pairs.join('&');
+      };
+      href = function() {
+        return _prefix + search();
+      };
+      search = function() {
+        if (_pairs.length > 0) {
+          return "?" + _pairs.join('&');
         } else {
           return "";
         }
-      };
-      _set = function(key, value) {
-        return _params[key] = value;
       };
       set = function() {
         var arg, key;
@@ -56,8 +53,18 @@
         var value;
         value = _params[key];
         delete _params[key];
+        _buildPairs();
         return value;
       };
+      if (_search.indexOf('?') >= 0) {
+        _search = _search.slice(1, _search.length).split('&');
+        for (_i = 0, _len = _search.length; _i < _len; _i++) {
+          pair = _search[_i];
+          pair = pair.split('=');
+          _params[pair[0]] = pair[1];
+        }
+        _buildPairs();
+      }
       return {
         href: href,
         search: search,
