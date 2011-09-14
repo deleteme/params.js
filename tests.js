@@ -88,9 +88,11 @@ $(document).ready(function(){
 
   module('Reducing URL Params');
 
-  test("unset() should return value of key being removed.", function(){
-    expect(1);
+  test("unset() should return value of key being removed and params shouldn't include it.", function(){
+    expect(3);
     equals(building.unset('sky'), 'blue');
+    equals(building.get('sky'), undefined);
+    equals(building.search().indexOf('sky'), -1);
   });
 
   test("href() should not include a key that has been removed.", function(){
