@@ -36,7 +36,7 @@ var stubbedLocation = {
 var fakedParams = new Params(stubbedLocation);
 ```
 
-## Instance Methods
+### Instance Methods
 
 #### get(key)
 
@@ -71,8 +71,15 @@ window.location.search.
 Useful to test if the given string resembles a valid location.search object.
 Returns true if it passes.
 
-## Static Methods
+### Static Methods
 
 #### Params.parse(string)
 
 Creates and returns an object from the query params in the string.
+
+## Change Log:
+
+**0.3.0** - _September 14, 2011_ - Using prototypes instead of closures to reduce memory footprint. Added `Params.parse()` static method.
+
+**0.2.1** - _August 17, 2011_ - Added `validate()` instance method.
+
