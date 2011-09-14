@@ -171,4 +171,16 @@ $(document).ready(function(){
 
   });
 
+
+  module("Static Methods: #parse()");
+
+  test("should turn a param string into an object", function(){
+    var paramString = "?foo=bar&wart=hog";
+    var obj = {
+      foo: 'bar',
+      wart: 'hog'
+    };
+    deepEqual(Params.parse(paramString), obj);
+  });
+
 });

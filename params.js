@@ -2,7 +2,6 @@ var Params, root;
 root = this;
 Params = (function() {
   function Params(_location) {
-    var pair, _i, _len, _ref;
     this._location = _location || root.location;
     this._search = this._location.search;
     this._prefix = this._location.protocol + '//' + this._location.host + this._location.pathname;
@@ -11,16 +10,8 @@ Params = (function() {
     if (!(this.validate(this._search))) {
       throw "Initializing Params with invalid location.search.";
     }
-    if (this._search.indexOf('?') >= 0) {
-      this._search = this._search.slice(1, this._search.length).split('&');
-      _ref = this._search;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        pair = _ref[_i];
-        pair = pair.split('=');
-        this._params[pair[0]] = pair[1];
-      }
-      this._buildPairs();
-    }
+    this._params = Params.parse(this._search);
+    this._buildPairs();
   }
   Params.prototype._set = function(key, value) {
     this._params[key] = value;
@@ -100,3 +91,15 @@ Params = (function() {
   };
   return Params;
 })();
+Params.parse = function(paramString) {
+  var pair, paramArray, paramObj, _i, _len;
+  paramObj = {};
+  paramArray = [];
+  paramArray = paramString.slice(1 + paramString.indexOf('?'), paramString.length).split('&');
+  for (_i = 0, _len = paramArray.length; _i < _len; _i++) {
+    pair = paramArray[_i];
+    pair = pair.split('=');
+    paramObj[pair[0]] = pair[1];
+  }
+  return paramObj;
+};

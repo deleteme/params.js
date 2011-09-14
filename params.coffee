@@ -15,14 +15,9 @@ class Params
       throw "Initializing Params with invalid location.search."
 
     # build _params keys
-    if @_search.indexOf('?') >= 0
-      # remove the leading ? character, and split on &
-      @_search = @_search[1...@_search.length].split('&')
-      for pair in @_search
-        pair = pair.split('=')
-        @_params[pair[0]] = pair[1]
+    @_params = Params.parse(@_search)
 
-      @_buildPairs()
+    @_buildPairs()
 
 
   # internal setting of a single pair
@@ -102,3 +97,16 @@ class Params
     valid
 
   get: (key)-> @_params[key]
+
+# a static method to turn a param string into an object
+Params.parse = (paramString)->
+  paramObj = {}
+  paramArray = []
+  # build _params keys
+  # remove the leading ? character, and split on &
+  paramArray = paramString[(1 + paramString.indexOf('?'))...paramString.length].split('&')
+  for pair in paramArray
+    pair = pair.split('=')
+    paramObj[pair[0]] = pair[1]
+
+  paramObj
