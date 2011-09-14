@@ -77,7 +77,7 @@ Returns true if it passes.
 
 Creates and returns an object from the query params in the string.
 
-## Change Log:
+### Change Log:
 
 **0.3.0** - _September 14, 2011_ - Using prototypes instead of closures to reduce memory footprint. Added `Params.parse()` static method.
 
