@@ -79,9 +79,9 @@ Creates and returns an object from the query params in the string.
 
 ### Change Log:
 
-**0.3.1** - _September 14, 2011_ - `Params.parse()` returns an empty object if it gets an empty string.
+**v0.3.1** - _September 14, 2011_ - `Params.parse()` returns an empty object if it gets an empty string.
 
-**0.3.0** - _September 14, 2011_ - Using prototypes instead of closures to reduce memory footprint. Added `Params.parse()` static method.
+**v0.3.0** - _September 14, 2011_ - Using prototypes instead of closures to reduce memory footprint. Added `Params.parse()` static method.
 
-**0.2.1** - _August 17, 2011_ - Added `validate()` instance method.
+**v0.2.1** - _August 17, 2011_ - Added `validate()` instance method.
 
