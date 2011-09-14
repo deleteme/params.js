@@ -1,4 +1,4 @@
-$(document).ready(function(){
+$(function(){
 
   var cheapcadaversURL = "http://www.cheapcadavers.com/?rick=moranis&bumblebee=tuna&hash[some_key]=someValue";
   var stubLocation = {
