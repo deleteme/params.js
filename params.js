@@ -96,11 +96,13 @@
     var pair, paramArray, paramObj, _i, _len;
     paramObj = {};
     paramArray = [];
-    paramArray = paramString.slice(1 + paramString.indexOf('?'), paramString.length).split('&');
-    for (_i = 0, _len = paramArray.length; _i < _len; _i++) {
-      pair = paramArray[_i];
-      pair = pair.split('=');
-      paramObj[pair[0]] = pair[1];
+    if (paramString.length > 1) {
+      paramArray = paramString.slice(1 + paramString.indexOf('?'), paramString.length).split('&');
+      for (_i = 0, _len = paramArray.length; _i < _len; _i++) {
+        pair = paramArray[_i];
+        pair = pair.split('=');
+        paramObj[pair[0]] = pair[1];
+      }
     }
     return paramObj;
   };

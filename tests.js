@@ -181,3 +181,7 @@ test("should turn a param string into an object", function(){
   deepEqual(Params.parse(paramString), obj);
 });
 
+test("should return an empty object if the provided string is blank", function(){
+  deepEqual(Params.parse(''), {});
+});
+

@@ -103,11 +103,12 @@ do ->
   root.Params.parse = (paramString)->
     paramObj = {}
     paramArray = []
-    # build _params keys
-    # remove the leading ? character, and split on &
-    paramArray = paramString[(1 + paramString.indexOf('?'))...paramString.length].split('&')
-    for pair in paramArray
-      pair = pair.split('=')
-      paramObj[pair[0]] = pair[1]
+    if paramString.length > 1
+      # build _params keys
+      # remove the leading ? character, and split on &
+      paramArray = paramString[(1 + paramString.indexOf('?'))...paramString.length].split('&')
+      for pair in paramArray
+        pair = pair.split('=')
+        paramObj[pair[0]] = pair[1]
 
     paramObj
