@@ -66,6 +66,10 @@ Returns a string that is a full URL, similar to window.location.href.
 Returns a string that is just the params, in a serialized form, similar to
 window.location.search.
 
+#### object()
+
+Returns a shallow copy of the internal _params object.
+
 #### validate(string)
 
 Useful to test if the given string resembles a valid location.search object.
@@ -78,6 +82,8 @@ Returns true if it passes.
 Creates and returns an object from the query params in the string.
 
 ### Change Log:
+
+**v0.4.0** - _September 26, 2011_ - Added `object()` instance method to return an object of the params.
 
 **v0.3.1** - _September 14, 2011_ - `Params.parse()` returns an empty object if it gets an empty string.
 

@@ -99,6 +99,13 @@ do ->
 
     get: (key)-> @_params[key]
 
+    # shallow copy the @_params
+    object: ->
+      obj = {}
+      for key of @_params
+        obj[key] = @_params[key]
+      obj
+
 # a static method to turn a param string into an object
   root.Params.parse = (paramString)->
     paramObj = {}

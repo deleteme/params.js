@@ -170,6 +170,24 @@ test("should warn if location.search appears invalid", function(){
 });
 
 
+module("object()");
+test("should return an object of the params", function(){
+  expect(4);
+  var obj = params.object();
+  equal(obj.bumblebee, 'tuna');
+  equal(obj['hash[some_key]'], 'someValue');
+  equal(obj.rick, 'moranis');
+  equal((typeof obj), 'object');
+});
+test("returned object should not be the internal params", function(){
+  expect(3);
+  var obj = params.object();
+  obj.q = 'nowai';
+  ok(obj.q != params.object().q);
+  ok(params.object().q != 'nowai');
+  ok(params._params.q != 'nowai');
+});
+
 module("Static Methods: #parse()");
 
 test("should turn a param string into an object", function(){

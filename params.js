@@ -1,3 +1,4 @@
+// params.js 0.4.0
 (function() {
   var root;
   root = this;
@@ -90,6 +91,14 @@
     Params.prototype.get = function(key) {
       return this._params[key];
     };
+    Params.prototype.object = function() {
+      var key, obj;
+      obj = {};
+      for (key in this._params) {
+        obj[key] = this._params[key];
+      }
+      return obj;
+    };
     return Params;
   })();
   return root.Params.parse = function(paramString) {
@@ -107,3 +116,4 @@
     return paramObj;
   };
 })();
+
