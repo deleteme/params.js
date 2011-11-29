@@ -50,12 +50,13 @@ properties to the params.
 If a key and value is passed, then it will make a new param with the given
 key and value.
 
-It returns either the object it was passed, or the key's value.
+It returns the params object, making it chainable.
 
 #### unset(key)
 
 Removes the key and value pair from the params.
-Returns the pair's value.
+
+It returns the params object, it's also chainable.
 
 #### href()
 
@@ -82,6 +83,8 @@ Returns true if it passes.
 Creates and returns an object from the query params in the string.
 
 ### Change Log:
+
+**v0.5.0** - _November 29, 2011_ - `set` and `unset` methods return the params object, making it chainable.
 
 **v0.4.0** - _September 26, 2011_ - Added `object()` instance method to return an object of the params.
 

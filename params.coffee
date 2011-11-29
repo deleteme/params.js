@@ -1,3 +1,4 @@
+# params.js 0.5.0
 # a small library to create a URL by adding and removing params while
 # preserving existing params
 do ->
@@ -45,11 +46,13 @@ do ->
 
     # add data to the params
     # usage:
-    # set(key, value) // returns value
+    # set(key, value)
     # set({
     #   key: value,
     #   anotherKey: anotherValue
-    # }) // returns the object
+    # })
+    #
+    # returns the params object, so it's chainable
     set: ->
       arg = arguments[0]
       # if a simple pair
@@ -59,17 +62,17 @@ do ->
       else if typeof arg is 'object'
         for key of arg
           @_set key, arg[key]
-        arg
       else
         throw "Unexpected data type for: #{arg}. Should be a string, number, or object"
+      @
 
     # removes a pair
-    # returns it's value
+    # returns the params object, so you can chain it
     unset: (key)->
       value = @_params[key]
       delete @_params[key]
       @_buildPairs()
-      value
+      @
 
     # an internal array of validations
     # if it passes the validation, it returns true

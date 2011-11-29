@@ -39,21 +39,21 @@ module("Setting Params");
 
 test("Can set() a key that's a string or number, and returns the value that's being set.", function(){
   expect(4);
-  equals(params.set('porkchop', 'sandwiches'), 'sandwiches');
+  equals(params.set('porkchop', 'sandwiches'), params);
   equals(params.get('porkchop'), 'sandwiches');
-  equals(params.set(341, 'baloney'), 'baloney');
+  equals(params.set(341, 'baloney'), params);
   equals(params.get(341), 'baloney');
 });
 
 var paramsWithObject = new Params(stubLocation);
-test("Returns an object if it took one.", function(){
+test("Can accept an object", function(){
   expect(5);
   var blort = {
     smoo: 123,
     lamb: 'da',
     123:  'asdf'
   };
-  equals(paramsWithObject.set(blort), blort);
+  equals(paramsWithObject.set(blort), paramsWithObject);
   equals(paramsWithObject.get('smoo'), 123);
   equals(paramsWithObject.get('lamb'), 'da');
   equals(paramsWithObject.get(123), 'asdf');
@@ -62,9 +62,20 @@ test("Returns an object if it took one.", function(){
 
 test("Can set a single param pair, and get it back out.", function(){
   expect(2);
-  var target = params.set('lazer', 'gunz');
-  equals(params.get('lazer'), target);
+  var value = 'gunz'
+  params.set('lazer', value);
+  equals(params.get('lazer'), value);
   notEqual(params.get('lazer'), undefined);
+});
+
+test("set() is chainable", function(){
+  expect(3);
+  equals(params.set('visa', 1234567890123456).set('mastercard', 'abcabcabcabcdddd'), params);
+  equals(params.get('visa'), 1234567890123456);
+  equals(params.get('mastercard'), 'abcabcabcabcdddd');
+
+  // cleanup
+  params.unset('visa').unset('mastercard');
 });
 
 module('Building search()');
@@ -86,9 +97,9 @@ test("href() should return an href with the updated params.", function(){
 
 module('Reducing URL Params');
 
-test("unset() should return value of key being removed and params shouldn't include it.", function(){
+test("unset() should return params object and params shouldn't include it.", function(){
   expect(3);
-  equals(building.unset('sky'), 'blue');
+  equals(building.unset('sky'), building);
   equals(building.get('sky'), undefined);
   equals(building.search().indexOf('sky'), -1);
 });
