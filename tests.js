@@ -20,31 +20,31 @@ $(document).ready(function(){
 
   test("href() should return the private Params href", function(){
     expect(1);
-    equals(params.href(), cheapcadaversURL);
+    equal(params.href(), cheapcadaversURL);
   });
 
   module("Reading Params");
 
   test("Knows about existing params on init.", function(){
     expect(3);
-    equals(params.get('rick'), 'moranis');
-    equals(params.get('bumblebee'), 'tuna');
-    equals(params.get('hash[some_key]'), 'someValue');
+    equal(params.get('rick'), 'moranis');
+    equal(params.get('bumblebee'), 'tuna');
+    equal(params.get('hash[some_key]'), 'someValue');
   });
 
   test("Returns undefined for undefined keys.", function(){
     expect(1);
-    equals(params.get('sandwich'), undefined);
+    equal(params.get('sandwich'), undefined);
   });
 
   module("Setting Params");
 
   test("Can set() a key that's a string or number, and returns the value that's being set.", function(){
     expect(4);
-    equals(params.set('porkchop', 'sandwiches'), 'sandwiches');
-    equals(params.get('porkchop'), 'sandwiches');
-    equals(params.set(341, 'baloney'), 'baloney');
-    equals(params.get(341), 'baloney');
+    equal(params.set('porkchop', 'sandwiches'), 'sandwiches');
+    equal(params.get('porkchop'), 'sandwiches');
+    equal(params.set(341, 'baloney'), 'baloney');
+    equal(params.get(341), 'baloney');
   });
 
   var paramsWithObject = new Params(stubLocation);
@@ -55,17 +55,17 @@ $(document).ready(function(){
       lamb: 'da',
       123:  'asdf'
     };
-    equals(paramsWithObject.set(blort), blort);
-    equals(paramsWithObject.get('smoo'), 123);
-    equals(paramsWithObject.get('lamb'), 'da');
-    equals(paramsWithObject.get(123), 'asdf');
-    equals(paramsWithObject.get('123'), 'asdf');
+    equal(paramsWithObject.set(blort), blort);
+    equal(paramsWithObject.get('smoo'), 123);
+    equal(paramsWithObject.get('lamb'), 'da');
+    equal(paramsWithObject.get(123), 'asdf');
+    equal(paramsWithObject.get('123'), 'asdf');
   });
 
   test("Can set a single param pair, and get it back out.", function(){
     expect(2);
     var target = params.set('lazer', 'gunz');
-    equals(params.get('lazer'), target);
+    equal(params.get('lazer'), target);
     notEqual(params.get('lazer'), undefined);
   });
 
@@ -75,7 +75,7 @@ $(document).ready(function(){
   test("search() should return just the params.", function(){
     expect(1);
     building.set('sky', 'blue');
-    equals(building.search(), stubLocation.search + '&sky=blue');
+    equal(building.search(), stubLocation.search + '&sky=blue');
   });
 
   module('Building href');
@@ -83,28 +83,28 @@ $(document).ready(function(){
   test("href() should return an href with the updated params.", function(){
     expect(1);
     building.set('sky', 'blue');
-    equals(building.href(), stubLocation.href + '&sky=blue');
+    equal(building.href(), stubLocation.href + '&sky=blue');
   });
 
   module('Reducing URL Params');
 
   test("unset() should return value of key being removed.", function(){
     expect(1);
-    equals(building.unset('sky'), 'blue');
+    equal(building.unset('sky'), 'blue');
   });
 
   test("href() should not include a key that has been removed.", function(){
     expect(4);
-    equals(building.href(), stubLocation.href);
+    equal(building.href(), stubLocation.href);
 
     building.unset('rick');
-    equals(building.href(), "http://www.cheapcadavers.com/?bumblebee=tuna&hash[some_key]=someValue");
+    equal(building.href(), "http://www.cheapcadavers.com/?bumblebee=tuna&hash[some_key]=someValue");
 
     building.unset('hash[some_key]');
-    equals(building.href(), "http://www.cheapcadavers.com/?bumblebee=tuna");
+    equal(building.href(), "http://www.cheapcadavers.com/?bumblebee=tuna");
 
     building.unset('bumblebee');
-    equals(building.href(), "http://www.cheapcadavers.com/");
+    equal(building.href(), "http://www.cheapcadavers.com/");
   });
 
   module('Errors!');
