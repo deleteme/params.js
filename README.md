@@ -36,11 +36,13 @@ var stubbedLocation = {
 var fakedParams = new Params(stubbedLocation);
 ```
 
-**get(key)**
+### Instance Methods
+
+#### get(key)
 
 Returns the value of the key
 
-**set(object or key, value)**
+#### set(object or key, value)
 
 If an object is the argument, then it will copy all of the object's
 properties to the params.
@@ -48,23 +50,47 @@ properties to the params.
 If a key and value is passed, then it will make a new param with the given
 key and value.
 
-It returns either the object it was passed, or the key's value.
+It returns the params object, making it chainable.
 
-**unset(key)**
+#### unset(key)
 
 Removes the key and value pair from the params.
-Returns the pair's value.
 
-**href()**
+It returns the params object, it's also chainable.
+
+#### href()
 
 Returns a string that is a full URL, similar to window.location.href.
 
-**search()**
+#### search()
 
 Returns a string that is just the params, in a serialized form, similar to
 window.location.search.
 
-**validate(string)**
+#### object()
+
+Returns a shallow copy of the internal _params object.
+
+#### validate(string)
 
 Useful to test if the given string resembles a valid location.search object.
 Returns true if it passes.
+
+### Static Methods
+
+#### Params.parse(string)
+
+Creates and returns an object from the query params in the string.
+
+### Change Log:
+
+**v0.5.0** - _November 29, 2011_ - `set` and `unset` methods return the params object, making it chainable.
+
+**v0.4.0** - _September 26, 2011_ - Added `object()` instance method to return an object of the params.
+
+**v0.3.1** - _September 14, 2011_ - `Params.parse()` returns an empty object if it gets an empty string.
+
+**v0.3.0** - _September 14, 2011_ - Using prototypes instead of closures to reduce memory footprint. Added `Params.parse()` static method.
+
+**v0.2.1** - _August 17, 2011_ - Added `validate()` instance method.
+
