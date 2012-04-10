@@ -1,0 +1,144 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Params.js by deleteme</title>
+    
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Params.js</h1>
+        <p>params.js takes the suck out of window.location.search.</p>
+        <p class="view"><a href="https://github.com/deleteme/params.js">View the Project on GitHub <small>deleteme/params.js</small></a></p>
+        <ul>
+          <li><a href="https://github.com/deleteme/params.js/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/deleteme/params.js/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/deleteme/params.js">Fork On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <p>Params.js is class that has an API for getting, setting, and unsetting URL query params
+without destroying any existing query params.</p>
+
+<p>It doesn't do anything fancy like serializing nested objects or attempting to
+preserve a particular param order.</p>
+
+<h3>Building</h3>
+
+<p>To watch the coffee file for changes and build the js:</p>
+
+<p><code>coffee -wcb params.coffee</code></p>
+
+<h3>Testing</h3>
+
+<p>Testing uses qunit. Open tests.html and tests.min.html.</p>
+
+<h3>API</h3>
+
+<p>First, make an instance of <code>Params</code>. By default, it uses window.location, but
+you can pass an object the constructor that resembles 'window.location'.</p>
+
+<div class="highlight">
+<pre><span class="c1">// plain</span>
+<span class="kd">var</span> <span class="nx">params</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Params</span><span class="p">();</span>
+
+<span class="c1">// with a stubbed location object</span>
+<span class="kd">var</span> <span class="nx">stubbedLocation</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">href</span><span class="o">:</span> <span class="nx">cheapcadaversURL</span><span class="p">,</span>
+  <span class="nx">search</span><span class="o">:</span> <span class="s2">"?rick=moranis&amp;bumblebee=tuna&amp;hash[some_key]=someValue"</span><span class="p">,</span>
+  <span class="nx">protocol</span><span class="o">:</span> <span class="s2">"http:"</span><span class="p">,</span>
+  <span class="nx">host</span><span class="o">:</span> <span class="s2">"<a href="http://www.cheapcadavers.com">www.cheapcadavers.com</a>"</span><span class="p">,</span>
+  <span class="nx">pathname</span><span class="o">:</span> <span class="s2">"/"</span>
+<span class="p">};</span>
+<span class="kd">var</span> <span class="nx">fakedParams</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Params</span><span class="p">(</span><span class="nx">stubbedLocation</span><span class="p">);</span>
+</pre>
+</div>
+
+
+<h3>Instance Methods</h3>
+
+<h4>get(key)</h4>
+
+<p>Returns the value of the key</p>
+
+<h4>set(object or key, value)</h4>
+
+<p>If an object is the argument, then it will copy all of the object's
+properties to the params.</p>
+
+<p>If a key and value is passed, then it will make a new param with the given
+key and value.</p>
+
+<p>It returns the params object, making it chainable.</p>
+
+<h4>unset(key)</h4>
+
+<p>Removes the key and value pair from the params.</p>
+
+<p>It returns the params object, it's also chainable.</p>
+
+<h4>href()</h4>
+
+<p>Returns a string that is a full URL, similar to window.location.href.</p>
+
+<h4>search()</h4>
+
+<p>Returns a string that is just the params, in a serialized form, similar to
+window.location.search.</p>
+
+<h4>object()</h4>
+
+<p>Returns a shallow copy of the internal _params object.</p>
+
+<h4>validate(string)</h4>
+
+<p>Useful to test if the given string resembles a valid location.search object.
+Returns true if it passes.</p>
+
+<h3>Static Methods</h3>
+
+<h4>Params.parse(string)</h4>
+
+<p>Creates and returns an object from the query params in the string.</p>
+
+<h3>Change Log:</h3>
+
+<p><strong>v0.5.1</strong> - <em>April 10, 2012</em> - <code>Params.parse</code> will call decodeURIComponent on values.</p>
+
+<p><strong>v0.5.0</strong> - <em>November 29, 2011</em> - <code>set</code> and <code>unset</code> methods return the params object, making it chainable.</p>
+
+<p><strong>v0.4.0</strong> - <em>September 26, 2011</em> - Added <code>object()</code> instance method to return an object of the params.</p>
+
+<p><strong>v0.3.1</strong> - <em>September 14, 2011</em> - <code>Params.parse()</code> returns an empty object if it gets an empty string.</p>
+
+<p><strong>v0.3.0</strong> - <em>September 14, 2011</em> - Using prototypes instead of closures to reduce memory footprint. Added <code>Params.parse()</code> static method.</p>
+
+<p><strong>v0.2.1</strong> - <em>August 17, 2011</em> - Added <code>validate()</code> instance method.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/deleteme">deleteme</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-79467-10");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
