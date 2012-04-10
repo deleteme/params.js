@@ -109,7 +109,7 @@ do ->
         obj[key] = @_params[key]
       obj
 
-# a static method to turn a param string into an object
+  # a static method to turn a param string into an object
   root.Params.parse = (paramString)->
     paramObj = {}
     paramArray = []
@@ -119,6 +119,6 @@ do ->
       paramArray = paramString[(1 + paramString.indexOf('?'))...paramString.length].split('&')
       for pair in paramArray
         pair = pair.split('=')
-        paramObj[pair[0]] = pair[1]
+        paramObj[pair[0]] = decodeURIComponent pair[1]
 
     paramObj

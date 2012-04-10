@@ -214,3 +214,14 @@ test("should return an empty object if the provided string is blank", function()
   deepEqual(Params.parse(''), {});
 });
 
+test("should decode encoded strings", function(){
+  var paramString = "start=2012-4-1&end=2012-4-10&sort=rating_count%2Cdesc&tz=CDT&page=1";
+  var obj = {
+    start: '2012-4-1',
+    end: '2012-4-10',
+    sort: 'rating_count,desc',
+    tz: 'CDT',
+    page: '1'
+  };
+  deepEqual(Params.parse(paramString), obj);
+});

@@ -121,7 +121,7 @@
       for (_i = 0, _len = paramArray.length; _i < _len; _i++) {
         pair = paramArray[_i];
         pair = pair.split('=');
-        paramObj[pair[0]] = pair[1];
+        paramObj[pair[0]] = decodeURIComponent(pair[1]);
       }
     }
     return paramObj;
