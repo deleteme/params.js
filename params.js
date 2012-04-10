@@ -10,7 +10,7 @@
       this._prefix = this._location.protocol + '//' + this._location.host + this._location.pathname;
       this._params = {};
       this._pairs = [];
-      if (!(this.validate(this._search))) {
+      if (!this.validate(this._search)) {
         throw "Initializing Params with invalid location.search.";
       }
       this._params = Params.parse(this._search);

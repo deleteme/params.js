@@ -13,11 +13,11 @@ do ->
       @_pairs = []
       # setup
       # warn if invalid object
-      unless (@validate(@_search))
+      unless @validate @_search
         throw "Initializing Params with invalid location.search."
 
       # build _params keys
-      @_params = Params.parse(@_search)
+      @_params = Params.parse @_search
 
       @_buildPairs()
 
@@ -118,7 +118,7 @@ do ->
       # remove the leading ? character, and split on &
       paramArray = paramString[(1 + paramString.indexOf('?'))...paramString.length].split('&')
       for pair in paramArray
-        pair = pair.split('=')
+        pair = pair.split '='
         paramObj[pair[0]] = decodeURIComponent pair[1]
 
     paramObj

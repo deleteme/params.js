@@ -84,6 +84,8 @@ Creates and returns an object from the query params in the string.
 
 ### Change Log:
 
+**v0.5.1** - _April 10, 2012_ - `Params.parse` will call decodeURIComponent on values.
+
 **v0.5.0** - _November 29, 2011_ - `set` and `unset` methods return the params object, making it chainable.
 
 **v0.4.0** - _September 26, 2011_ - Added `object()` instance method to return an object of the params.
