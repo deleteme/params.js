@@ -40,7 +40,7 @@
     };
 
     Params.prototype.search = function() {
-      if (this._pairs.length > 0) {
+      if (this._pairs.length) {
         return "?" + this._pairs.join('&');
       } else {
         return "";
@@ -74,7 +74,7 @@
       function(string) {
         return typeof string === 'string';
       }, function(string) {
-        if (string.length > 0) {
+        if (string.length) {
           return string.match(/^\?/);
         } else {
           return true;

@@ -39,7 +39,7 @@ do ->
 
     # build only the params, similar to location.search
     search: ->
-      if @_pairs.length > 0
+      if @_pairs.length
         "?" + @_pairs.join('&')
       else
         ""
@@ -80,7 +80,7 @@ do ->
       # it's a string
       (string)-> typeof string is 'string'
       # should start with ?
-      (string)-> if string.length > 0 then string.match(/^\?/) else true,
+      (string)-> if string.length then string.match(/^\?/) else true,
       # it shouldn't end with &
       (string)-> !string.match(/&$/)
     ]
