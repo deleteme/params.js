@@ -2,7 +2,7 @@
 # a small library to create a URL by adding and removing params while
 # preserving existing params
 do ->
-  root = this
+  root = exports ? this
   class root.Params
     constructor: (_location)->
       @_location = _location or root.location
@@ -122,3 +122,4 @@ do ->
         paramObj[pair[0]] = decodeURIComponent pair[1]
 
     paramObj
+
