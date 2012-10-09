@@ -2,7 +2,6 @@ var vows = require('vows'),
     assert = require('assert');
 
 var Params = require('../params.js').Params;
-console.log(Params);
 
 var cheapcadaversURL = "http://www.cheapcadavers.com/?rick=moranis&bumblebee=tuna&hash[some_key]=someValue";
 var stubLocation = {
@@ -13,26 +12,27 @@ var stubLocation = {
   pathname: "/"
 };
 
+function makeParamsWithStub(){
+    return new Params(stubLocation);
+}
 
 vows.describe('Params').addBatch({
     'initialization': {
       'with a location': {
           "don't error": function(){
-              assert.doesNotThrow(function(){
-                return new Params(stubLocation);
-              }, Error);
+              assert.doesNotThrow(makeParamsWithStub, Error);
           }
       },
-      'without a location': {
+      /*'without a location': {
           "don't error": function(){
             assert.doesNotThrow(function(){
               return new Params();
             }, Error);
           }
-      },
+      },*/
     },
-    'API': {
-      topic: function(){ return new Params(stubLocation); },
+    'API: instance methods': {
+      topic: makeParamsWithStub,
       'href()': {
         'should return the private Params href': function(params){
           assert.equal(params.href(), cheapcadaversURL);
@@ -47,202 +47,159 @@ vows.describe('Params').addBatch({
         'returns undefined for nonexistent keys': function(params){
           assert.isUndefined(params.get('sandwich'));
         }
+      },
+      'set()': {
+          'Can set a key that is a string or number, and returns the value that is being set.': function(params){
+              assert.equal(params.set('porkchop', 'sandwiches'), params);
+              assert.equal(params.get('porkchop'), 'sandwiches');
+              assert.equal(params.set(341, 'baloney'), params);
+              assert.equal(params.get(341), 'baloney');
+          },
+          'Can accept an object': function(params){
+              var blort = {
+                  smoo: 123,
+                  lamb: 'da',
+                  123:  'asdf'
+              };
+              assert.equal(params.set(blort), params);
+              assert.equal(params.get('smoo'), 123);
+              assert.equal(params.get('lamb'), 'da');
+              assert.equal(params.get(123), 'asdf');
+              assert.equal(params.get('123'), 'asdf');
+          },
+          'Can set a single param pair, and get it back out.': function(params){
+              var value = 'gunz';
+              params.set('lazer', value);
+              assert.equal(params.get('lazer'), value);
+              assert.notEqual(params.get('lazer'), undefined);
+              assert.isTrue(!!params.get('lazer'));
+          },
+          'is chainable': function(params){
+              assert.equal(params.set('visa', 1234567890123456).set('mastercard', 'abcabcabcabcdddd'), params);
+              assert.equal(params.get('visa'), 1234567890123456);
+              assert.equal(params.get('mastercard'), 'abcabcabcabcdddd');
+          },
+          'raises an error with an unsupported data type': function(params){
+              assert.throws(function(){
+                  params.set(function(){}, 'blort');
+              });
+              assert.throws(function(){
+                  params.set(false, 'blort');
+              });
+          }
+      },
+      'search()': {
+          topic: makeParamsWithStub,
+          'should return just the params': function(params){
+              params.set('sky', 'blue');
+              assert.equal(params.search(), stubLocation.search + '&sky=blue');
+          }
+      },
+      'href()': {
+          topic: makeParamsWithStub,
+          'should return an href with the updated params.': function(params){
+              params.set('sky', 'blue');
+              assert.equal(params.href(), stubLocation.href + '&sky=blue');
+          }
+      },
+      'unset()': {
+          topic: makeParamsWithStub,
+          'should return params object and params should not include it.': function(params){
+              assert.equal(params.unset('sky'), params);
+              assert.equal(params.get('sky'), undefined);
+              assert.equal(params.search().indexOf('sky'), -1);
+          },
+          'href() should not include a key that has been removed.': function(params){
+              assert.equal(params.href(), stubLocation.href);
+              params.unset('rick');
+              assert.equal(params.href(), "http://www.cheapcadavers.com/?bumblebee=tuna&hash[some_key]=someValue");
+              params.unset('hash[some_key]');
+              assert.equal(params.href(), "http://www.cheapcadavers.com/?bumblebee=tuna");
+              params.unset('bumblebee');
+              assert.equal(params.href(), "http://www.cheapcadavers.com/");
+          }
+      },
+      'validate()': {
+          'validates a single string argument': function(params){
+              assert.ok(params.validate("?foo=bar"));
+              assert.ok(params.validate("?foo=bar&baz=wat"));
+              assert.ok(params.validate(""));
+          },
+          "should fail if the wrong data type is passed in": function(params){
+              assert.ok(!params.validate(undefined));
+              assert.ok(!params.validate(false));
+              assert.ok(!params.validate(true));
+              assert.ok(!params.validate(324));
+              assert.ok(!params.validate(/someregexp/));
+              assert.ok(!params.validate([]));
+              assert.ok(!params.validate({huh:'wat'}));
+          },
+          "should fail if doesnt start with ?": function(params){
+              assert.ok(!params.validate("Xfoo=bar&baz=wat"));
+              assert.ok(!params.validate("&foo=bar&baz=wat"));
+              assert.ok(!params.validate("&foo=bar&baz=wat&"));
+          },
+          'should fail if it ends with a &': function(params){
+            assert.ok(!params.validate('?foo=bar&baz=wat&'));
+          },
+          "should warn if location.search appears invalid": function(params){
+              var invalidStubbedLocation = {
+                  href:     cheapcadaversURL,
+                  search:   "&rick=moranis&bumblebee=tuna&hash[some_key]=someValue&",
+                  protocol: "http:",
+                  host:     "www.cheapcadavers.com",
+                  pathname: "/"
+              };
+              var makeParamsFromInvalidObject = function(){
+                  var invalidParams = new Params(invalidStubbedLocation);
+              };
+
+              assert.throws(function(){
+                  makeParamsFromInvalidObject();
+              }, "Initializing Params with invalid location.search.");
+          }
+      },
+      'object()': {
+        "should return an object of the params": function(params){
+          var obj = params.object();
+          assert.equal(obj.bumblebee, 'tuna');
+          assert.equal(obj['hash[some_key]'], 'someValue');
+          assert.equal(obj.rick, 'moranis');
+          assert.equal((typeof obj), 'object');
+        },
+        "returned object should not be the internal params": function(params){
+          var obj = params.object();
+          obj.q = 'nowai';
+          assert.ok(obj.q != params.object().q);
+          assert.ok(params.object().q != 'nowai');
+          assert.ok(params._params.q != 'nowai');
+        }
       }
+    },
+    'API: static methods': {
+        'Params.parse()': {
+            "should turn a param string into an object": function(){
+              var paramString = "?foo=bar&wart=hog";
+              var obj = {
+                foo: 'bar',
+                wart: 'hog'
+              };
+              assert.deepEqual(Params.parse(paramString), obj);
+            },
+            "should return an empty object if the provided string is blank": function(){
+              assert.deepEqual(Params.parse(''), {});
+            },
+            "should decode encoded strings": function(){
+              var paramString = "start=2012-4-1&end=2012-4-10&sort=rating_count%2Cdesc&tz=CDT&page=1";
+              var obj = {
+                start: '2012-4-1',
+                end: '2012-4-10',
+                sort: 'rating_count,desc',
+                tz: 'CDT',
+                page: '1'
+              };
+              assert.deepEqual(Params.parse(paramString), obj);
+            }
+        }
     }
 }).export(module);
-
-/*
-
-
-
-module("Setting Params");
-
-test("Can set() a key that's a string or number, and returns the value that's being set.", function(){
-  expect(4);
-  equals(params.set('porkchop', 'sandwiches'), params);
-  equals(params.get('porkchop'), 'sandwiches');
-  equals(params.set(341, 'baloney'), params);
-  equals(params.get(341), 'baloney');
-});
-
-var paramsWithObject = new Params(stubLocation);
-test("Can accept an object", function(){
-  expect(5);
-  var blort = {
-    smoo: 123,
-    lamb: 'da',
-    123:  'asdf'
-  };
-  equals(paramsWithObject.set(blort), paramsWithObject);
-  equals(paramsWithObject.get('smoo'), 123);
-  equals(paramsWithObject.get('lamb'), 'da');
-  equals(paramsWithObject.get(123), 'asdf');
-  equals(paramsWithObject.get('123'), 'asdf');
-});
-
-test("Can set a single param pair, and get it back out.", function(){
-  expect(2);
-  var value = 'gunz'
-  params.set('lazer', value);
-  equals(params.get('lazer'), value);
-  notEqual(params.get('lazer'), undefined);
-});
-
-test("set() is chainable", function(){
-  expect(3);
-  equals(params.set('visa', 1234567890123456).set('mastercard', 'abcabcabcabcdddd'), params);
-  equals(params.get('visa'), 1234567890123456);
-  equals(params.get('mastercard'), 'abcabcabcabcdddd');
-
-  // cleanup
-  params.unset('visa').unset('mastercard');
-});
-
-module('Building search()');
-var building = new Params(stubLocation);
-
-test("search() should return just the params.", function(){
-  expect(1);
-  building.set('sky', 'blue');
-  equals(building.search(), stubLocation.search + '&sky=blue');
-});
-
-module('Building href');
-
-test("href() should return an href with the updated params.", function(){
-  expect(1);
-  building.set('sky', 'blue');
-  equals(building.href(), stubLocation.href + '&sky=blue');
-});
-
-module('Reducing URL Params');
-
-test("unset() should return params object and params shouldn't include it.", function(){
-  expect(3);
-  equals(building.unset('sky'), building);
-  equals(building.get('sky'), undefined);
-  equals(building.search().indexOf('sky'), -1);
-});
-
-test("href() should not include a key that has been removed.", function(){
-  expect(4);
-  equals(building.href(), stubLocation.href);
-
-  building.unset('rick');
-  equals(building.href(), "http://www.cheapcadavers.com/?bumblebee=tuna&hash[some_key]=someValue");
-
-  building.unset('hash[some_key]');
-  equals(building.href(), "http://www.cheapcadavers.com/?bumblebee=tuna");
-
-  building.unset('bumblebee');
-  equals(building.href(), "http://www.cheapcadavers.com/");
-});
-
-module('Errors!');
-test("Should throw an error with an unsupported data type.", function(){
-  expect(2);
-  raises(function(){
-    building.set(function(){}, 'blort');
-  });
-  raises(function(){
-    building.set(false, 'blort');
-  });
-});
-
-module("validate()");
-test("validates a single string argument", function(){
-  expect(3);
-  // should pass
-  ok(params.validate("?foo=bar"));
-  ok(params.validate("?foo=bar&baz=wat"));
-  ok(params.validate(""));
-});
-
-test("should fail if the wrong data type is passed in", function(){
-  expect(7);
-  ok(!params.validate(undefined));
-  ok(!params.validate(false));
-  ok(!params.validate(true));
-  ok(!params.validate(324));
-  ok(!params.validate(/someregexp/));
-  ok(!params.validate([]));
-  ok(!params.validate({huh:'wat'}));
-});
-
-test("should fail if doesnt start with ?", function(){
-  expect(3);
-  ok(!params.validate("Xfoo=bar&baz=wat"));
-  ok(!params.validate("&foo=bar&baz=wat"));
-  ok(!params.validate("&foo=bar&baz=wat&"));
-});
-
-test("should fail if ends with &", function(){
-  expect(1);
-  ok(!params.validate("?foo=bar&baz=wat&"));
-});
-
-test("should warn if location.search appears invalid", function(){
-  expect(1);
-  var invalidStubbedLocation = {
-    href:     cheapcadaversURL,
-    search:   "&rick=moranis&bumblebee=tuna&hash[some_key]=someValue&",
-    protocol: "http:",
-    host:     "www.cheapcadavers.com",
-    pathname: "/"
-  };
-  var makeParamsFromInvalidObject = function(){
-    var invalidParams = new Params(invalidStubbedLocation);
-  };
-  
-  raises(function(){
-    makeParamsFromInvalidObject();
-  }, "Initializing Params with invalid location.search.");
-
-});
-
-
-module("object()");
-test("should return an object of the params", function(){
-  expect(4);
-  var obj = params.object();
-  equal(obj.bumblebee, 'tuna');
-  equal(obj['hash[some_key]'], 'someValue');
-  equal(obj.rick, 'moranis');
-  equal((typeof obj), 'object');
-});
-test("returned object should not be the internal params", function(){
-  expect(3);
-  var obj = params.object();
-  obj.q = 'nowai';
-  ok(obj.q != params.object().q);
-  ok(params.object().q != 'nowai');
-  ok(params._params.q != 'nowai');
-});
-
-module("Static Methods: #parse()");
-
-test("should turn a param string into an object", function(){
-  var paramString = "?foo=bar&wart=hog";
-  var obj = {
-    foo: 'bar',
-    wart: 'hog'
-  };
-  deepEqual(Params.parse(paramString), obj);
-});
-
-test("should return an empty object if the provided string is blank", function(){
-  deepEqual(Params.parse(''), {});
-});
-
-test("should decode encoded strings", function(){
-  var paramString = "start=2012-4-1&end=2012-4-10&sort=rating_count%2Cdesc&tz=CDT&page=1";
-  var obj = {
-    start: '2012-4-1',
-    end: '2012-4-10',
-    sort: 'rating_count,desc',
-    tz: 'CDT',
-    page: '1'
-  };
-  deepEqual(Params.parse(paramString), obj);
-});
-*/
