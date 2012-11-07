@@ -31,7 +31,12 @@ do ->
     # internal helper method to build an array of pairs
     _buildPairs: ->
       @_pairs = for key of @_params
-        "#{key}=#{@_params[key]}"
+        if Object.prototype.toString.call(@_params[key]) is "[object Array]"
+          (for item of @_params[key]
+            "#{key}=#{@_params[key][item]}"
+          ).join('&')
+        else
+          "#{key}=#{@_params[key]}"
 
     # build the full url, similar to location.href
     href: ->
@@ -58,6 +63,7 @@ do ->
       # if a simple pair
       if typeof arg is 'string' or typeof arg is 'number'
         @_set String(arg), arguments[1]
+
 
       else if typeof arg is 'object'
         for key of arg

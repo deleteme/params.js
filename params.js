@@ -25,12 +25,23 @@
     };
 
     Params.prototype._buildPairs = function() {
-      var key;
+      var item, key;
       return this._pairs = (function() {
         var _results;
         _results = [];
         for (key in this._params) {
-          _results.push("" + key + "=" + this._params[key]);
+          if (Object.prototype.toString.call(this._params[key]) === "[object Array]") {
+            _results.push(((function() {
+              var _results1;
+              _results1 = [];
+              for (item in this._params[key]) {
+                _results1.push("" + key + "=" + this._params[key][item]);
+              }
+              return _results1;
+            }).call(this)).join('&'));
+          } else {
+            _results.push("" + key + "=" + this._params[key]);
+          }
         }
         return _results;
       }).call(this);

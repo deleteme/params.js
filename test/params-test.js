@@ -1,5 +1,5 @@
 var vows = require('vows'),
-    assert = require('assert');
+assert = require('assert');
 
 var Params = require('../params.js').Params;
 
@@ -23,24 +23,34 @@ vows.describe('Params').addBatch({
                 assert.doesNotThrow(makeParamsWithStub, Error);
             }
         },
+        'can make array params': function(){
+            var p = new Params({
+                href:     cheapcadaversURL,
+                search:   "?rick=moranis&bumblebee=tuna&hash[some_key]=someValue&foo=x&foo=y",
+                protocol: "http:",
+                host:     "www.cheapcadavers.com",
+                pathname: "/"
+            });
+            assert.deepEqual(p.get('foo'), ['x', 'y'])
+            assert.isArray(p.get('foo'))
+        }
     /*'without a location': {
       "don't error": function(){
       assert.doesNotThrow(function(){
       return new Params();
       }, Error);
       }
-      },*/
-    },
-    'API: instance methods': {
-        topic: makeParamsWithStub,
-'href()': {
-    'should return the private Params href': function(params){
-        assert.equal(params.href(), cheapcadaversURL);
-    }
+  },*/
 },
+'API: instance methods': {
+    topic: makeParamsWithStub,
+    'href()': {
+        'should return the private Params href': function(params){
+            assert.equal(params.href(), cheapcadaversURL);
+        }
+    },
     'get()': {
         'knows about existing params': function(params){
-            console.log(params);
             assert.equal(params.get('rick'), 'moranis');
             assert.equal(params.get('bumblebee'), 'tuna');
             assert.equal(params.get('hash[some_key]'), 'someValue');
@@ -75,6 +85,13 @@ vows.describe('Params').addBatch({
             assert.notEqual(params.get('lazer'), undefined);
             assert.isTrue(!!params.get('lazer'));
         },
+        'Can set an array, and get it back out': function(params){
+            var arr = ['a', 'b'];
+            params.set('my_array', arr);
+            var got = params.get('my_array');
+
+            assert.deepEqual(got, arr);
+        },
         'is chainable': function(params){
             assert.equal(params.set('visa', 1234567890123456).set('mastercard', 'abcabcabcabcdddd'), params);
             assert.equal(params.get('visa'), 1234567890123456);
@@ -94,6 +111,10 @@ vows.describe('Params').addBatch({
         'should return just the params': function(params){
             params.set('sky', 'blue');
             assert.equal(params.search(), stubLocation.search + '&sky=blue');
+        },
+        'for arrays, should set key multiple times': function(params){
+            params.set('foo', ['a', 'b']);
+            assert.equal(params.search(), stubLocation.search + '&sky=blue&foo=a&foo=b');
         }
     },
     'href()': {
@@ -101,6 +122,10 @@ vows.describe('Params').addBatch({
         'should return an href with the updated params.': function(params){
             params.set('sky', 'blue');
             assert.equal(params.href(), stubLocation.href + '&sky=blue');
+        },
+        'for arrays, should set key multiple times': function(params){
+            params.set('foo', ['a', 'b']);
+            assert.equal(params.href(), stubLocation.href + '&sky=blue&foo=a&foo=b');
         }
     },
     'unset()': {
@@ -182,35 +207,35 @@ vows.describe('Params').addBatch({
         }
     }
 },
-    'API: static methods': {
-        'Params.parse()': {
-            "should turn a param string into an object": function(){
-                var paramString = "?foo=bar&wart=hog";
-                var obj = {
-                    foo: 'bar',
-                    wart: 'hog'
-                };
-                assert.deepEqual(Params.parse(paramString), obj);
-            },
-            "should return an empty object if the provided string is blank": function(){
-                assert.deepEqual(Params.parse(''), {});
-            },
-            "should decode encoded strings": function(){
-                var paramString = "start=2012-4-1&end=2012-4-10&sort=rating_count%2Cdesc&tz=CDT&page=1";
-                var obj = {
-                    start: '2012-4-1',
-                    end: '2012-4-10',
-                    sort: 'rating_count,desc',
-                    tz: 'CDT',
-                    page: '1'
-                };
-                assert.deepEqual(Params.parse(paramString), obj);
-            },
-            "should decode array parameters": function(){
-                var paramString = "foo=a&foo=b";
-                var obj = { foo: ['a', 'b'] };
-                assert.deepEqual(Params.parse(paramString), obj);
-            }
+'API: static methods': {
+    'Params.parse()': {
+        "should turn a param string into an object": function(){
+            var paramString = "?foo=bar&wart=hog";
+            var obj = {
+                foo: 'bar',
+                wart: 'hog'
+            };
+            assert.deepEqual(Params.parse(paramString), obj);
+        },
+        "should return an empty object if the provided string is blank": function(){
+            assert.deepEqual(Params.parse(''), {});
+        },
+        "should decode encoded strings": function(){
+            var paramString = "start=2012-4-1&end=2012-4-10&sort=rating_count%2Cdesc&tz=CDT&page=1";
+            var obj = {
+                start: '2012-4-1',
+                end: '2012-4-10',
+                sort: 'rating_count,desc',
+                tz: 'CDT',
+                page: '1'
+            };
+            assert.deepEqual(Params.parse(paramString), obj);
+        },
+        "should decode array parameters": function(){
+            var paramString = "foo=a&foo=b";
+            var obj = { foo: ['a', 'b'] };
+            assert.deepEqual(Params.parse(paramString), obj);
         }
     }
+}
 }).export(module);
