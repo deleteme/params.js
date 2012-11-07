@@ -1,4 +1,4 @@
-# params.js 0.5.0
+# params.js 0.6.0
 # a small library to create a URL by adding and removing params while
 # preserving existing params
 do ->
