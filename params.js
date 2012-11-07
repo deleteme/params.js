@@ -116,7 +116,7 @@
 
   })();
   return root.Params.parse = function(paramString) {
-    var pair, paramArray, paramObj, _i, _len;
+    var k, pair, paramArray, paramObj, v, _i, _len;
     paramObj = {};
     paramArray = [];
     if (paramString.length > 1) {
@@ -124,7 +124,16 @@
       for (_i = 0, _len = paramArray.length; _i < _len; _i++) {
         pair = paramArray[_i];
         pair = pair.split('=');
-        paramObj[pair[0]] = decodeURIComponent(pair[1]);
+        k = pair[0];
+        v = pair[1];
+        if (k in paramObj) {
+          if (Object.prototype.toString.call(paramObj[k]) !== '[object Array]') {
+            paramObj[k] = [paramObj[k]];
+          }
+          paramObj[k].push(decodeURIComponent(v));
+        } else {
+          paramObj[k] = decodeURIComponent(v);
+        }
       }
     }
     return paramObj;

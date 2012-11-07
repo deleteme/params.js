@@ -200,6 +200,11 @@ vows.describe('Params').addBatch({
                     page: '1'
                 };
                 assert.deepEqual(Params.parse(paramString), obj);
+            },
+            "should decode array parameters": function(){
+                var paramString = "foo=a&foo=b";
+                var obj = { foo: ['a', 'b'] };
+                assert.deepEqual(Params.parse(paramString), obj);
             }
         }
     }

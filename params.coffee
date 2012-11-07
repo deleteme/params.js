@@ -119,7 +119,14 @@ do ->
       paramArray = paramString[(1 + paramString.indexOf('?'))...paramString.length].split('&')
       for pair in paramArray
         pair = pair.split '='
-        paramObj[pair[0]] = decodeURIComponent pair[1]
+        k = pair[0]
+        v = pair[1]
+        if k of paramObj
+          if Object.prototype.toString.call(paramObj[k]) isnt '[object Array]'
+            paramObj[k] = [paramObj[k]]
+          paramObj[k].push decodeURIComponent v
+        else
+          paramObj[k] = decodeURIComponent v
 
     paramObj
 
