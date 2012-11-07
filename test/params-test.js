@@ -170,10 +170,15 @@ vows.describe('Params').addBatch({
         },
         "returned object should not be the internal params": function(params){
             var obj = params.object();
+            assert.ok(params._params !== obj);
+
+            // modify returned object
             obj.q = 'nowai';
-            assert.ok(obj.q != params.object().q);
-            assert.ok(params.object().q != 'nowai');
-            assert.ok(params._params.q != 'nowai');
+
+            // assert that the internal one didn't get changed
+            assert.ok(obj.q !== params.object().q);
+            assert.isUndefined(params._params.q);
+            assert.isUndefined(params.object().q);
         }
     }
 },
