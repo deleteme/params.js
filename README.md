@@ -14,7 +14,7 @@ To watch the coffee file for changes and build the js:
 
 ### Testing
 
-Testing uses qunit. Open tests.html and tests.min.html.
+Testing uses vows. `npm install vows -g` then run `vows`.
 
 ### API
 
@@ -83,6 +83,8 @@ Returns true if it passes.
 Creates and returns an object from the query params in the string.
 
 ### Change Log:
+
+**v0.6.0** - _November 7, 2012_ - Converts test suite from qunit to vows. Added the ability to save arrays, serialize arrays like: `foo=a&foo=b`, and `Params.parse` can interpret serialized arrays.
 
 **v0.5.1** - _April 10, 2012_ - `Params.parse` will call decodeURIComponent on values.
 
